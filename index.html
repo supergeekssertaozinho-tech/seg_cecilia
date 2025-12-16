@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Site Pokémon</title>
+
+  <style>
+    :root {
+      /* PALETA POKÉMON */
+      --pk-yellow: #FFCB05;
+      --pk-blue: #2A75BB;
+      --pk-blue-dark: #1A3E7A;
+      --pk-red: #E3350D;
+      --bg-light: #F2F2F2;
+
+      --text-dark: #222;
+      --max-width: 1100px;
+      --gutter: 1rem;
+      --radius: 12px;
+      --transition: 250ms ease;
+    }
+
+    /* ESTADO FECHADO (ESFERA) */
+    .image-box.closed {
+      border-radius: 50%;
+      background: url("pokeball.png") center/cover no-repeat;
+      transform: scale(90%);
+      transition: 0.3s ease-in-out;
+    }
+
+    /* Esconde a imagem real quando fechado */
+    .image-box.closed img,
+    .image-box.closed .image-gradient,
+    .image-box.closed .image-title {
+      opacity: 0;
+    }
+
+    /* Impede hover exagerado enquanto fechado */
+    .image-box.closed:hover {
+      transform: scale(1.03);
+    }
+
+    .image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg-light);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* ===== TOPO ===== */
+    header {
+      background: linear-gradient(135deg, var(--pk-blue-dark), var(--pk-blue));
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      font-weight: bold;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+
+      /* Animação flutuante */
+      animation: floatHeader 3s ease-in-out infinite;
+    }
+
+    @keyframes floatHeader {
+      0% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== MAIN ===== */
+    main {
+      max-width: var(--max-width);
+      margin: 1.5rem auto;
+      padding: var(--gutter);
+    }
+
+    /* GRID DE IMAGENS */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .image-box {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: var(--pk-yellow);
+      border-radius: var(--radius);
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow .25s ease;
+    }
+
+    .image-box:hover {
+      transform: scale(1.06);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    /* GRADIENTE PARA O TÍTULO */
+    .image-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top,
+          rgba(0, 0, 0, 0.65),
+          rgba(0, 0, 0, 0));
+      opacity: 1;
+      transition: var(--transition);
+    }
+
+    .image-title {
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      z-index: 2;
+      pointer-events: none;
+      transition: var(--transition);
+    }
+
+    .image-box:hover .image-gradient {
+      opacity: 1;
+    }
+
+    /* BOTÃO */
+    .play-btn {
+      margin: 2rem auto 0;
+      display: block;
+      padding: 0.9rem 2rem;
+      font-size: 1.2rem;
+      background: var(--pk-red);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .play-btn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    .play-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* EXPANSÃO DA IMAGEM */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+      z-index: 999;
+    }
+
+    .overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .zoom-img {
+      .zoom-img {
+        width: 80%;
+        max-width: 600px;
+        border-radius: var(--radius);
+        transform: scale(0.3);
+        transition: transform .25s ease;
+        object-fit: contain;
+      }
+
+    }
+
+    .overlay.open .zoom-img {
+      transform: scale(1);
+    }
+
+    /* MOBILE */
+    @media(max-width:600px) {
+      .image-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .zoom-img {
+        width: 90%;
+      }
+    }
+
+    /* ===== RODAPÉ ===== */
+    footer {
+      background: linear-gradient(135deg, var(--pk-blue), var(--pk-blue-dark));
+      color: white;
+      text-align: center;
+      padding: 1.5rem 1rem;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+
+    footer p {
+      margin: 6px 0;
+      opacity: 0.9;
+    }
+
+    footer p:nth-child(1) {
+      font-style: italic;
+    }
+
+    footer p:nth-child(2) {
+      font-weight: bold;
+    }
+
+    footer p:nth-child(3) {
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<div class="red-overlay" id="red1"></div>
+<div class="red-overlay" id="red2"></div>
+<div class="red-overlay" id="red3"></div>
+
+<body>
+
+  <header>A GRANDE AVENTURA POKÉMON</header>
+
+  <main>
+
+    <h2>Galeria Pokémon</h2>
+    <div class="image-grid">
+      <div class="image-box closed">
+        <img src="char.png" class="thumb">
+        <div class="image-gradient"></div>
+        <div class="image-title">Personagem</div>
+      </div>
+
+      <div class="image-box closed">
+        <img src="enemy.png" class="thumb">
+        <div class="image-gradient"></div>
+        <div class="image-title">Inimigo</div>
+      </div>
+
+      <div class="image-box closed">
+        <img src="background.png" class="thumb">
+        <div class="image-gradient"></div>
+        <div class="image-title">Background</div>
+      </div>
+
+      <div class="image-box closed">
+        <img src="tilemap.png" class="thumb">
+        <div class="image-gradient"></div>
+        <div class="image-title">Tilemap</div>
+      </div>
+    </div>
+
+    <button class="play-btn">Jogar agora</button>
+
+  </main>
+
+  <!-- OVERLAY DE ZOOM -->
+  <div class="overlay" id="overlay">
+    <div class="zoom-img" id="zoom-img"></div>
+  </div>
+
+  <footer>
+    <p>Projeto desenvolvido por Cecília Sayuri Kasama Adachi</p>
+    <p>Produzido no Curso Natal IA - SuperGeeks Sertãozinho</p>
+    <p>Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    // Seleciona todos os cards, o overlay e a imagem de zoom
+    const boxes = document.querySelectorAll('.image-box');
+    const overlay = document.getElementById('overlay');
+    const zoomImg = document.getElementById('zoom-img');
+
+    boxes.forEach(box => {
+      box.addEventListener('click', () => {
+
+        // Remove o estado fechado
+        if (box.classList.contains('closed')) {
+          box.classList.remove('closed');
+          return;
+        }
+        else{
+          box.classList.add('closed')
+        }
+
+      });
+    });
+  </script>
+
+</body>
+
+</html>
